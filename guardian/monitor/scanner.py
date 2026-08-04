@@ -9,6 +9,7 @@ def get_processes():
         if item.isdigit():
             name = "not_a_process"
             pid = int(item)
+            ppid = None
 
             try:
                 # using with automatically closes the file when we are done. prevents mem leak
@@ -25,13 +26,19 @@ def get_processes():
                         
                         if key == 'Name':
                             name = value.strip()
-                            break # no point readinf rest of the file
+
+                        if key == 'PPid':
+                            ppid = value.strip()
+
+                        if name and ppid:
+                            break # no point reading rest of the file
+                                
             except FileNotFoundError:
                 continue
 
             # print(f"name: {name} & pid: {pid}")
 
-            process = Process(pid, name)
+            process = Process(pid, ppid,name)
             processes.append(process)
 
 
