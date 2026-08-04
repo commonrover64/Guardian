@@ -1,5 +1,5 @@
 from monitor.scanner import get_processes
-from detection.rules import get_real_path, is_from_temp, suspicious_parent_child_relation
+from detection.rules import get_real_path, is_from_temp, suspicious_relation
 from output.formatter import print_alert
 
 def main():
@@ -12,7 +12,8 @@ def main():
         
         if is_from_temp(path):
             print_alert(process, "Process Running from /tmp")
-        elif suspicious_parent_child_relation(process):
+
+        if suspicious_relation(process):
             print_alert(process, f"Unusual for the {process.parent_name} to execute {process.name}")
 
 
