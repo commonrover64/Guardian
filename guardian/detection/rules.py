@@ -2,15 +2,15 @@ import os
 
 # 1st rule
 def get_real_path(process):
-    process_real_path = "not found yet"
     try:
-        process_real_path = os.readlink(f"/proc/{process.id}/exe")
+        return os.readlink(f"/proc/{process.id}/exe")
     except FileNotFoundError:
-        print("error finding real path")
-
-    return process_real_path
-
+        print(f"Executable for process {process.id} not found")
+        return None
+    
 def is_from_temp(path):
+    if path == None: 
+        return False
     return path == "/tmp" or path.startswith("/tmp/")
 
 # 2nd rule
