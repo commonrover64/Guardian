@@ -3,6 +3,7 @@ from monitor.process import Process
 
 def get_processes():
     processes = []
+    pid_to_name = {} # processid: name pair
     proc_entries = os.listdir("/proc")
 
     for item in proc_entries:
@@ -23,12 +24,13 @@ def get_processes():
                         key, value = line.split(':', 1)
                         # clean extra whitespace and newlines
                         key = key.strip()
+                        value = value.strip()
                         
                         if key == 'Name':
-                            name = value.strip()
+                            name = value
 
                         if key == 'PPid':
-                            ppid = value.strip()
+                            ppid = int(value)
 
                         if name and ppid:
                             break # no point reading rest of the file
@@ -36,10 +38,13 @@ def get_processes():
             except FileNotFoundError:
                 continue
 
-            # print(f"name: {name} & pid: {pid}")
-
-            process = Process(pid, ppid,name)
+            process = Process(pid, name, ppid, None)
             processes.append(process)
+            pid_to_name[pid] = name
+
+    # fill in all parents name
+    for process in processes:
+        process.parent_name = pid_to_name.get(process.parent_id)
 
 
     return processes
