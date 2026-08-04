@@ -14,7 +14,7 @@ def main():
             print_alert(process, "Process Running from /tmp")
 
         if suspicious_relation(process):
-            print_alert(process, f"Unusual for the {process.parent_name} to execute {process.name}")
+            print_alert(process, f"Unusual for \"{process.parent_name}\" to execute \"{process.name}\"")
 
 
 
