@@ -6,13 +6,16 @@ def print_alert(process, reason):
     print()
 
 def print_network_connections(connections):
-    print("\nEstablished Network Connections:\n")
+    print("\nEstablished Network Connections:")
+    print("-" * 75)
 
     for connection in connections:
         print(
-            f"connection: "
+            f"{connection['process_name']:<12} "
+            f"(PID {connection['pid']:<6}) "
             f"{connection['local_ip']}:{connection['local_port']} "
             f"-> "
-            f"{connection['remote_ip']}:{connection['remote_port']} "
-            f"(inode: {connection['inode']})"
+            f"{connection['remote_ip']}:{connection['remote_port']}"
         )
+
+    print("-" * 75)

@@ -18,10 +18,9 @@ def main():
             print_alert(process, f"Unusual for \"{process.parent_name}\" to execute \"{process.name}\"")
 
     print(f"\nGetting Established Network connections...\n")
-    connections = get_established_connections()
+    connections = get_established_connections(processes)
 
     print_network_connections(connections)
-
-
+   
 if __name__ == "__main__":
     main()
