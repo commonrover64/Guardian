@@ -12,9 +12,11 @@ def hex_to_ip(hex_str):
 def hex_to_port(hex_str):
     return int(hex_str, 16)
 
-def find_pid_by_inode(inode):
-    target = f"socket:[{inode}]"
+def get_socket_inode_map():
+    inode_to_pid = {}
 
+    # scan each process once and build
+    # socket inode -> PID
     for pid in os.listdir("/proc"):
         if not pid.isdigit():
             continue
@@ -23,15 +25,21 @@ def find_pid_by_inode(inode):
         try:
             for fd in os.listdir(fd_path):
                 link = os.readlink(f"{fd_path}/{fd}")
-                if link == target:
-                    return int(pid)
+
+                if link.startswith("socket:["):
+                    # socket:[11234] -> 11234
+                    inode = int(link[8:-1])
+                    inode_to_pid[inode] = int(pid)
         except (PermissionError, FileNotFoundError):
             continue    # process may disappear or deny access when scanning 
 
-    return None
+    return inode_to_pid
 
 def get_established_connections(processes):
     connections = []
+
+    # Build the socket -> PID map once instead of scanning every process for every network connection.
+    inode_to_pid = get_socket_inode_map()
 
     # map Pid process so we can quickly see the owner of a socket
     process_by_id = {process.id: process for process in processes}
@@ -54,7 +62,7 @@ def get_established_connections(processes):
         remote_ip, remote_port = remote_address.split(":")
 
         connection_inode = int(inode)
-        pid = find_pid_by_inode(connection_inode)
+        pid = inode_to_pid.get(connection_inode) # O(1) lookup instead of scannibng /proc again
 
         process = process_by_id.get(pid)
 
