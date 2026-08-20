@@ -1,3 +1,6 @@
+import json
+from datetime import datetime, timezone
+
 def print_alert(process, reason):
     print(f"\n! SUSPICIOUS PROCESS DETECTED !")
     print(f"    Process : {process.name} (PID {process.id})")
@@ -27,3 +30,12 @@ def print_network_alert(connection, reason):
     print(f"    Remote       : {connection['remote_ip']}:{connection['remote_port']}")
     print(f"    Reason       : {reason}")
     print()
+
+def write_alert(rule_name, details, filepath = "alerts.jsonl"):
+    alert = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "rule": rule_name,
+        "details": details,
+    }
+    with open(filepath, "a") as file:
+        file.write(json.dumps(alert) + "\n")
