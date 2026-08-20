@@ -1,6 +1,6 @@
 from monitor.scanner import get_processes
-from detection.rules import get_real_path, is_from_temp, suspicious_relation
-from output.formatter import print_alert, print_network_connections
+from detection.rules import get_real_path, is_from_temp, suspicious_relation, is_unattributed
+from output.formatter import print_alert, print_network_connections, print_network_alert
 from monitor.network import get_established_connections
 
 def main():
@@ -19,8 +19,11 @@ def main():
 
     print(f"\nGetting Established Network connections...\n")
     connections = get_established_connections(processes)
-
     print_network_connections(connections)
+
+    for connection in connections:
+        if is_unattributed(connection):
+            print_network_alert(connection, "No owning process found for this connection's socket")
    
 if __name__ == "__main__":
-    main()
+    main() 

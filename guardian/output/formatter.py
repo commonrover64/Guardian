@@ -19,3 +19,11 @@ def print_network_connections(connections):
         )
 
     print("-" * 75)
+
+def print_network_alert(connection, reason):
+    print(f"\n! SUSPICIOUS NETWORK CONNECTION DETECTED !")
+    print(f"    Process      : {connection['process_name']} (PID {connection['pid']})")
+    print(f"    Local        : {connection['local_ip']}:{connection['local_port']}")
+    print(f"    Remote       : {connection['remote_ip']}:{connection['remote_port']}")
+    print(f"    Reason       : {reason}")
+    print()

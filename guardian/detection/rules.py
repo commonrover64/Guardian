@@ -34,3 +34,7 @@ def suspicious_relation(process):
         return False
 
     return child in suspicious_parent_child_relation.get(parent, set()) # returns all the childs for this parent in set and then checks if the current child is one of them
+
+# 3rd rule. flag network connections with no owning process found via inode lookup
+def is_unattributed(connection):
+    return connection["pid"] is None
