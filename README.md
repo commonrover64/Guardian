@@ -42,7 +42,7 @@ cp /bin/sleep /tmp/sleep
 ```
 ! SUSPICIOUS PROCESS DETECTED !
     Process : sleep (PID 113733)
-    Parent  : PID 89977
+    Parent  : PID 89977 
     Reason  : Process Running from /tmp
 ```
 
