@@ -5,7 +5,7 @@ def get_real_path(process):
     try:
         return os.readlink(f"/proc/{process.id}/exe")
     except FileNotFoundError:
-        print(f"Executable for process {process.id} not found")
+        # print(f"Executable for process {process.id} not found")
         return None
     
 def is_from_temp(path):
