@@ -38,3 +38,28 @@ def suspicious_relation(process):
 # 3rd rule. flag network connections with no owning process found via inode lookup
 def is_unattributed(connection):
     return connection["pid"] is None
+
+LOLBIN_CHAINS = [
+    (["python3", "bash"], "T1059.004"),
+    (["bash", "nc"], "T1059.004"),
+    (["bash", "curl"], "T1105"),
+    (["bash", "wget"], "T1105"),
+    (["cron", "bash"], "T1053.003"),
+    (["sshd", "bash"], "T1059.004"),
+    (["winword.exe", "powershell.exe"], "T1059.001"),
+    (["excel.exe", "powershell.exe"], "T1059.001"),
+    (["powershell.exe", "certutil.exe"], "T1105"),
+]
+
+def matches_lolbin_chain(process, lineage):
+    chain = lineage.get_chain(process.id)
+    full_chain = [process.name] + chain
+
+    for pattern, technique_id in LOLBIN_CHAINS:
+        if pattern == full_chain[:len(pattern)]:
+            return technique_id
+
+    return None
+
+def is_short_lived_attacker(process, lineage):
+    return lineage.is_short_lived_with_connection(process.id)
