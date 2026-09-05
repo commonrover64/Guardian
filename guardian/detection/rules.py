@@ -51,12 +51,12 @@ LOLBIN_CHAINS = [
     (["powershell.exe", "certutil.exe"], "T1105"),
 ]
 
-def matches_lolbin_chain(process, lineage):
-    chain = lineage.get_chain(process.id)
-    full_chain = [process.name] + chain
+def matches_lolbin_chain(pid, name, lineage):
+    chain = lineage.get_chain(pid)
+    full_chain = list(reversed(chain)) + [name]
 
     for pattern, technique_id in LOLBIN_CHAINS:
-        if pattern == full_chain[:len(pattern)]:
+        if full_chain[-len(pattern):] == pattern:
             return technique_id
 
     return None

@@ -22,15 +22,18 @@ class LineageTracker:
             self.processes.pop(event["pid"], None)
 
     def get_chain(self, pid):
-        # walks up from pid to root, returns list of comm names, closest ancestor first
+        # walks up from pid parent to root, returns list of comm names, closest ancestor first
         chain = []
-        current = self.processes.get(pid)
+        current_pid = self.processes.get(pid, {}).get("ppid")
         seen = set()
 
-        while current and current["ppid"] not in seen:
+        while current_pid is not None and current_pid not in seen:
+            seen.add(current_pid)
+            current = self.processes.get(current_pid)
+            if not current:
+                break
             chain.append(current["comm"])
-            seen.add(current["ppid"])
-            current = self.processes.get(current["ppid"])
+            current_pid =  current["ppid"]
         return chain
 
     def is_short_lived_with_connection(self, pid):

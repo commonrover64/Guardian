@@ -1,10 +1,10 @@
 import json
 from datetime import datetime, timezone
 
-def print_alert(process, reason):
+def print_alert(name, pid, parent_id, reason):
     print(f"\n! SUSPICIOUS PROCESS DETECTED !")
-    print(f"    Process : {process.name} (PID {process.id})")
-    print(f"    Parent  : PID {process.parent_id}")
+    print(f"    Process : {name} (PID {pid})")
+    print(f"    Parent  : PID {parent_id}")
     print(f"    Reason  : {reason}")
     print()
 

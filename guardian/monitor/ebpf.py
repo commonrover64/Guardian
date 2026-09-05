@@ -2,7 +2,7 @@ import subprocess, threading, time
 
 # bpftrace script, one probe per event, piped output parsed by handle_line
 BPFTRACE_SCRIPT = """
-tracepoint:syscalls:sys_enter_execve
+tracepoint:sched:sched_process_exec
 {
     printf("EXEC|%d|%d|%s\\n", pid, curtask->real_parent->tgid, comm);
 }
@@ -50,7 +50,7 @@ class EbpfMonitor:
                 "comm": parts[3],
                 "ts": time.time(),
             }) 
-        elif event_type == "connect" and len(parts) == 2:
+        elif event_type == "CONNECT" and len(parts) == 2:
             self.shared_queue.put({
                 "type": "connect",
                 "pid": int(parts[1]),
