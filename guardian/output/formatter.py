@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timezone
+from output.elastic_client import ElasticClient
 
 def print_alert(name, pid, parent_id, reason):
     print(f"\n! SUSPICIOUS PROCESS DETECTED !")
@@ -31,6 +32,8 @@ def print_network_alert(connection, reason):
     print(f"    Reason       : {reason}")
     print()
 
+elastic_client = ElasticClient()
+
 def write_alert(rule_name, details, filepath = "alerts.jsonl"):
     alert = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -39,3 +42,4 @@ def write_alert(rule_name, details, filepath = "alerts.jsonl"):
     }
     with open(filepath, "a") as file:
         file.write(json.dumps(alert) + "\n")
+    elastic_client.index_alert(rule_name, details)

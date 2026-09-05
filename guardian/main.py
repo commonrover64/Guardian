@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from monitor.scanner import get_processes
 from detection.rules import get_real_path, is_from_temp, suspicious_relation, is_unattributed, matches_lolbin_chain
 from output.formatter import print_alert,print_network_alert, write_alert
