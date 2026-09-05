@@ -13,7 +13,7 @@ this tracks which process started which. some parent/child pairings can be a lit
 **Rule 3: Unattributed network connections**
 Guardian reads established TCP connections from `/proc/net/tcp` and tries to match each one back to the process that owns it, by mapping socket inodes to process file descriptors. if a connection cant be matched to any process, it gets flagged since that can be a sign of something hiding its network activity.
 
-**Rule 4: LOLBin chain detection** tracks real-time process lineage via eBPF (using bpftrace), not just a single parent/child pair like Rule 2, but the actual exec chain leading up to a process. Certain chains, like `bash` spawning `curl`, or `python3` spawning `bash`, are common living-off-the-land patterns attackers use to blend in with legitimate system activity. Matches are tagged with a MITRE ATT&CK technique ID.
+**Rule 4: LOLBin chain detection** tracks real-time process lineage via eBPF (using bpftrace), not just a single parent/child pair like Rule 2, but the actual exec chain leading up to a process. Certain chains, like `bash` spawning `curl`, or `python3` spawning `bash`, are common living-off-the-land patterns attackers use to blend in with legitimate system activity. Matches are tagged with a [MITRE ATT&CK technique ID](https://attack.mitre.org/techniques/enterprise/).
 
 **Rule 5: Short-lived process with a network connection** catches processes that make an outbound connection and exit quickly, often too fast for `/proc` polling alone to ever see them. This is only possible because of the eBPF layer running alongside the polling scanner, catching exec and exit events the instant they happen instead of on a fixed interval.
 
