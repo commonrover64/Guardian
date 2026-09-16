@@ -1,0 +1,4 @@
+bcc==0.35.0
+elasticsearch==9.5.0
+elastic-transport==9.4.2
+python-dotenv==1.2.3
