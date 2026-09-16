@@ -1,6 +1,12 @@
 # Guardian
 A process monitoring tool for Linux that flags suspicious process behavior. Basically a small hand built taste of what EDR (Endpoint Detection and Response) tools do under the hood.
 
+## Running Guardian
+Guardian needs root to read every process's `/proc` entry, and uses a virtual environment for its dependencies:
+```
+sudo venv/bin/python main.py
+```
+
 ## How it works
 Guardian reads live process info straight from `/proc` on Linux (no external libraries needed for that part) and runs each process through three detection rules (you can add your own rules):
 
